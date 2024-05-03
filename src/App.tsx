@@ -4,22 +4,17 @@ import * as esbuild from "esbuild-wasm";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
 import CodeEditor from "./components/CodeEditor";
+import Preview from "./components/PreviewWindow";
 
 function App() {
+  const [code, setCode] = useState("");
   const [input, setInput] = useState("");
   const ref = useRef<any>();
-  const iframeRef = useRef<any>();
-
-  // const onCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   setInput(e.target.value);
-  // };
 
   const inputSubmitHandler = async () => {
     if (!ref.current) {
       return;
     }
-
-    iframeRef.current.srcdoc = html;
 
     const result = await ref.current.build({
       entryPoints: ["index.js"],
@@ -34,16 +29,7 @@ function App() {
       },
     });
 
-    iframeRef.current.contentWindow.postMessage(
-      result.outputFiles[0].text,
-      "*"
-    );
-
-    // setCode(result.outputFiles[0].text);
-
-    // This is used to run the code in the iframe but it is not safe
-    // There are certain things that can be done to make it safe
-    // eval(result.outputFiles[0].text);
+    setCode(result.outputFiles[0].text);
   };
 
   const initEsbuild = async () => {
@@ -83,22 +69,16 @@ function App() {
 
   return (
     <>
-      <h1>Hello world</h1>
       <div>
         <CodeEditor
           onChange={(value) => setInput(value)}
-          initValue="// Start writing your code..."
+          initValue="// Start writing your code.."
         />
 
         <button onClick={inputSubmitHandler}>Submit</button>
       </div>
       <div>
-        <iframe
-          title="Preview"
-          ref={iframeRef}
-          srcDoc={html}
-          sandbox="allow-scripts"
-        ></iframe>
+        <Preview code={code} html={html} />
       </div>
     </>
   );
