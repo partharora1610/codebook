@@ -3,16 +3,16 @@ import "./App.css";
 import * as esbuild from "esbuild-wasm";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
+import CodeEditor from "./components/CodeEditor";
 
 function App() {
-  const [code, setCode] = useState("");
   const [input, setInput] = useState("");
   const ref = useRef<any>();
   const iframeRef = useRef<any>();
 
-  const onCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-  };
+  // const onCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   setInput(e.target.value);
+  // };
 
   const inputSubmitHandler = async () => {
     if (!ref.current) {
@@ -38,10 +38,11 @@ function App() {
       result.outputFiles[0].text,
       "*"
     );
+
     // setCode(result.outputFiles[0].text);
+
     // This is used to run the code in the iframe but it is not safe
     // There are certain things that can be done to make it safe
-
     // eval(result.outputFiles[0].text);
   };
 
@@ -73,7 +74,7 @@ function App() {
           }
         }, false);
 
-        ${code}
+        
       </script>
     </body>
   </html>
@@ -84,13 +85,11 @@ function App() {
     <>
       <h1>Hello world</h1>
       <div>
-        <textarea
-          onChange={onCodeChange}
-          style={{
-            width: "500px",
-            height: "100px",
-          }}
+        <CodeEditor
+          onChange={(value) => setInput(value)}
+          initValue="// Start writing your code..."
         />
+
         <button onClick={inputSubmitHandler}>Submit</button>
       </div>
       <div>
@@ -100,10 +99,6 @@ function App() {
           srcDoc={html}
           sandbox="allow-scripts"
         ></iframe>
-      </div>
-
-      <div>
-        <pre>{code}</pre>
       </div>
     </>
   );
