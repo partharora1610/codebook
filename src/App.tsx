@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
 import * as esbuild from "esbuild-wasm";
-
+import { Provider } from "react-redux";
+import { store } from "./state";
+import MarkdownCell from "./components/shared/MarkdownCell";
+// import CodeCell from "./components/shared/CodeCell";
 import "./App.css";
-import CodeCell from "./components/shared/CodeCell";
 
 function App() {
   const ref = useRef<any>();
@@ -20,11 +22,11 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col gap-12">
-        <CodeCell esRef={ref} />
-        <CodeCell esRef={ref} />
-        <CodeCell esRef={ref} />
-      </div>
+      <Provider store={store}>
+        <div className="flex flex-col gap-12">
+          <MarkdownCell />
+        </div>
+      </Provider>
     </>
   );
 }
