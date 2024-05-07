@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 
 const CodeCell = ({ esRef: ref }: any) => {
   const [code, setCode] = useState("");
+  const [error, setError] = useState("");
   const [input, setInput] = useState("");
 
   const inputSubmitHandler = async () => {
@@ -19,21 +20,34 @@ const CodeCell = ({ esRef: ref }: any) => {
       return;
     }
 
-    const result = await ref.current.build({
-      entryPoints: ["index.js"],
-      bundle: true,
-      write: false,
+    try {
+      const result = await ref.current.build({
+        entryPoints: ["index.js"],
+        bundle: true,
+        write: false,
 
-      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
+        plugins: [unpkgPathPlugin(), fetchPlugin(input)],
 
-      define: {
-        "process.env.NODE_ENV": '"production"',
-        global: "window",
-      },
-    });
+        define: {
+          "process.env.NODE_ENV": '"production"',
+          global: "window",
+        },
+      });
 
-    setCode(result.outputFiles[0].text);
+      setCode(result.outputFiles[0].text);
+      setError("");
+    } catch (error) {
+      setError("Bundling Error: Invalid Code Provided by the user");
+      setCode("");
+    }
   };
+
+  /**
+   * We need to handle three types of error
+   * 1. Sync Error
+   * 2. Async Error
+   * 3. Invalid Code request by the user => Bundling Error
+   */
 
   const html = `
 <!DOCTYPE html>
@@ -42,13 +56,23 @@ const CodeCell = ({ esRef: ref }: any) => {
   <body>
     <div id="root"></div>
     <script>
-      window.addEventListener('message', (event) => {
+    
+    const handleError = (err) => {
+      const root = document.querySelector('#root');
+      root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
+      console.error(err);
+    }
+
+    window.addEventListener('error', (event) => {
+      event.preventDefault();
+      handleError(event.error);
+    })
+
+    window.addEventListener('message', (event) => {
         try {
           eval(event.data);
         } catch (err) {
-          const root = document.querySelector('#root');
-          root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
-          console.error(err);
+          handleError(err);
         }
       }, false);         
     </script>
@@ -70,7 +94,7 @@ const CodeCell = ({ esRef: ref }: any) => {
         <ResizableHandle withHandle />
         <ResizablePanel className="text-black">
           <div className="w-full h-full">
-            <Preview code={code} html={html} />
+            <Preview code={code} html={html} error={error} />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
