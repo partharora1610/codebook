@@ -34,7 +34,19 @@ const reducer = (state: CellState = initialState, action: Action) => {
       };
 
     case ActionTypes.DELETE_CELL:
-      return state;
+      const cellId = action.payload;
+      const newOrder = state.order.filter((id) => id !== cellId);
+
+      return {
+        ...state,
+        order: newOrder,
+        data: Object.keys(state.data).reduce((acc, key) => {
+          if (key !== cellId) {
+            acc[key] = state.data[key];
+          }
+          return acc;
+        }, {} as CellState["data"]),
+      };
 
     case ActionTypes.MOVE_CELL:
       return state;

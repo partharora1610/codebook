@@ -1,19 +1,30 @@
+import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
-import React from "react";
 
-const MarkdownCell = () => {
-  const [editing, setEditing] = React.useState(true);
-  const [value, setValue] = React.useState("### Hello, world!");
+import { useAction } from "@/hooks/use-action";
+import { Cell } from "@/state";
+
+interface MarkdownCellProps {
+  cell: Cell;
+}
+
+const MarkdownCell: React.FC<MarkdownCellProps> = ({ cell }) => {
+  const { updateCell } = useAction();
+  const [editing, setEditing] = useState(true);
 
   const handleEditorChange = (newValue: any) => {
-    setValue(newValue);
+    updateCell(cell.id, newValue);
   };
 
   if (editing) {
     return (
       <div className="w-[500px]">
-        <div data-color-mode="light">
-          <MDEditor height={200} value={value} onChange={handleEditorChange} />
+        <div data-color-mode="dark">
+          <MDEditor
+            height={200}
+            value={cell.content}
+            onChange={handleEditorChange}
+          />
         </div>
         <button onClick={() => setEditing(false)}>Close</button>
       </div>
@@ -22,7 +33,7 @@ const MarkdownCell = () => {
 
   return (
     <div className="w-[500px]">
-      <MDEditor.Markdown source={value} />
+      <MDEditor.Markdown source={cell.content} />
       <button onClick={() => setEditing(true)}>Edit</button>
     </div>
   );

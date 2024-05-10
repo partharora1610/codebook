@@ -5,49 +5,34 @@ import {
 } from "@/components/ui/resizable";
 import CodeEditor from "./CodeEditor";
 import Preview from "./PreviewWindow";
-import { useState } from "react";
-import { unpkgPathPlugin } from "@/plugins/unpkg-path-plugin";
-import { fetchPlugin } from "@/plugins/fetch-plugin";
-import { Button } from "../ui/button";
+import { Cell } from "@/state/cell.ts";
+import { useAction } from "@/hooks/use-action.ts";
+import { useTypesSelector } from "@/hooks/use-types-selector.tsx";
+import { useEffect } from "react";
 
-const CodeCell = ({ esRef: ref }: any) => {
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-  const [input, setInput] = useState("");
+interface CodeCellProp {
+  cell: Cell;
+}
 
-  const inputSubmitHandler = async () => {
-    if (!ref.current) {
+const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
+  const { updateCell, createBundle } = useAction();
+  const result = useTypesSelector((state) => state.bundles[cell.id]);
+
+  useEffect(() => {
+    // getting the initial bundle
+    if (!result) {
+      createBundle(cell.id, cell.content);
       return;
     }
 
-    try {
-      const result = await ref.current.build({
-        entryPoints: ["index.js"],
-        bundle: true,
-        write: false,
+    const timer = setTimeout(async () => {
+      createBundle(cell.id, cell.content);
+    }, 750);
 
-        plugins: [unpkgPathPlugin(), fetchPlugin(input)],
-
-        define: {
-          "process.env.NODE_ENV": '"production"',
-          global: "window",
-        },
-      });
-
-      setCode(result.outputFiles[0].text);
-      setError("");
-    } catch (error) {
-      setError("Bundling Error: Invalid Code Provided by the user");
-      setCode("");
-    }
-  };
-
-  /**
-   * We need to handle three types of error
-   * 1. Sync Error
-   * 2. Async Error
-   * 3. Invalid Code request by the user => Bundling Error
-   */
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [cell.content, cell.id]);
 
   const html = `
 <!DOCTYPE html>
@@ -86,19 +71,22 @@ const CodeCell = ({ esRef: ref }: any) => {
         <ResizablePanel className="text-black">
           <div className="w-full h-full">
             <CodeEditor
-              initValue="// some commeny"
-              onChange={(value) => setInput(value)}
+              initValue=""
+              onChange={(value) => updateCell(cell.id, value)}
             />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel className="text-black">
           <div className="w-full h-full">
-            <Preview code={code} html={html} error={error} />
+            {!result || result.loading ? (
+              <div className="">Loading bar</div>
+            ) : (
+              <Preview code={result.code} html={html} error={result.err} />
+            )}
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
-      <Button onClick={inputSubmitHandler}>Submit</Button>
     </div>
   );
 };
