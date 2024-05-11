@@ -1,5 +1,5 @@
 {
-  "name": "codebook",
+  "name": "local-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,6 @@
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@reduxjs/toolkit": "^2.2.3",
-    "@shiftfour/react-md-editor": "^3.0.9-bi.16.1.2",
     "@types/axios": "^0.14.0",
     "@types/redux": "^3.6.0",
     "@uiw/react-md-editor": "^4.0.4",
