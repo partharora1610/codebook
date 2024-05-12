@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import path from "path";
+import createCellRouter from "./router/cell.router";
 
 export const serve = (
   port: number,
@@ -9,6 +10,7 @@ export const serve = (
   useProxy: boolean
 ) => {
   const app: Express = express();
+  app.use(createCellRouter(filename, dir));
 
   if (useProxy) {
     app.use(
@@ -19,9 +21,12 @@ export const serve = (
     );
   } else {
     const packagePath = require.resolve("local-client/dist/index.html");
-    // console.log(packagePath);
     app.use(express.static(path.dirname(packagePath)));
   }
+
+  app.get("/health", async (req, res) => {
+    res.send("Health");
+  });
 
   return new Promise<void>((resolve, reject) => {
     app
