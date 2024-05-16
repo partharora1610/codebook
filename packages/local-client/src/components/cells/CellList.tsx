@@ -1,35 +1,19 @@
 import { useTypesSelector } from "@/hooks/use-types-selector";
-import CellListItem from "./CellListItem";
-import { useEffect } from "react";
 import { useAction } from "@/hooks/use-action";
+import CellListItem from "./CellListItem";
 
 const CellList: React.FC = () => {
-  const { fetchCell, insertCellBefore } = useAction();
+  const { insertCellBefore } = useAction();
 
-  const cells = useTypesSelector(({ cells: { order, data } }) => {
+  const cells = useTypesSelector(({ cells: { data, order } }) => {
     return order.map((id) => data[id]);
   });
-
-  useEffect(() => {
-    fetchCell();
-  }, []);
-
-  // saving into redux store and fs
-  // useEffect(() => {
-  //   const timer = setTimeout(async () => {
-  //     saveCells();
-  //   }, 250);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [JSON.stringify(cells)]);
 
   const addCellHandler = () => {
     insertCellBefore(null, "code");
   };
 
-  const renderedCells = cells.map((cell) => (
+  const renderedCells = cells.map((cell: any) => (
     <CellListItem key={cell.id} cell={cell} />
   ));
 

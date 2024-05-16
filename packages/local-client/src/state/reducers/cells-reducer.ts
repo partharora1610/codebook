@@ -53,9 +53,6 @@ const reducer = (state: CellState = initialState, action: Action) => {
 
     case ActionTypes.INSERT_CELL_BEFORE:
       const { id: beforeId, type } = action.payload;
-      console.log("Here");
-      console.log(beforeId);
-      console.log(type);
 
       const cell: Cell = {
         content: "",
@@ -66,16 +63,14 @@ const reducer = (state: CellState = initialState, action: Action) => {
       state.data[cell.id] = cell;
 
       const foundIndex = state.order.findIndex((id) => id === beforeId);
-      console.log(foundIndex);
 
       if (foundIndex < 0) {
         state.order.push(cell.id);
       } else {
         state.order.splice(foundIndex, 0, cell.id);
       }
-      console.log(state);
 
-      return state;
+      return { ...state }; // m chutiya hoon
 
     case ActionTypes.FETCH_CELL:
       return {
