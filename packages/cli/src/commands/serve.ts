@@ -18,11 +18,15 @@ export const serveCommand = new Command()
       try {
         const dir = path.join(process.cwd(), path.dirname(filename));
         const file = path.basename(filename);
+
         await serve(parseInt(options.port), file, dir, !isProduction);
       } catch (error) {
         if (error instanceof Error) {
           console.log(error.message);
         }
+
+        // force exit process
+        // process.exit(1);
       }
     }
   );

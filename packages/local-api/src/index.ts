@@ -10,7 +10,12 @@ export const serve = (
   useProxy: boolean
 ) => {
   const app: Express = express();
+
   app.use(createCellRouter(filename, dir));
+
+  app.get("/health", async (req, res) => {
+    res.send("Health");
+  });
 
   if (useProxy) {
     app.use(
@@ -21,18 +26,15 @@ export const serve = (
     );
   } else {
     const packagePath = require.resolve("local-client/dist/index.html");
+    console.log(packagePath);
     app.use(express.static(path.dirname(packagePath)));
   }
-
-  app.get("/health", async (req, res) => {
-    res.send("Health");
-  });
 
   return new Promise<void>((resolve, reject) => {
     app
       .listen(port, () => {
         console.log(
-          `Opened ${filename}. Naivgate to the http://localhost:${port} to edit`
+          `Opened ${filename}. Naivgate to the http://localhost:${port} to edittt!!`
         );
         resolve();
       })

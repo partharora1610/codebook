@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -8,7 +9,6 @@ import Preview from "./PreviewWindow";
 import { Cell } from "@/state/cell.ts";
 import { useAction } from "@/hooks/use-action.ts";
 import { useTypesSelector } from "@/hooks/use-types-selector.tsx";
-import { useEffect } from "react";
 
 interface CodeCellProp {
   cell: Cell;
@@ -17,11 +17,9 @@ interface CodeCellProp {
 const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
   const { updateCell, createBundle } = useAction();
   const result = useTypesSelector((state) => state.bundles[cell.id]);
-
   /**
    * Combine all the code cells before the current cell
    */
-
   const combinedCode = useTypesSelector((state) => {
     const { data, order } = state.cells;
     const orderedCells = order.map((id) => data[id]);
@@ -81,8 +79,8 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
   }, [combinedCode.join("\n"), cell.id]);
 
   const html = `
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
   <head></head>
   <body>
     <div id="root"></div>
@@ -108,7 +106,7 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
       }, false);         
     </script>
   </body>
-</html>
+  </html>
 `;
 
   return (
