@@ -7,13 +7,14 @@ interface CodeEditorProps {
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ initValue, onChange }) => {
-  function handleEditorChange(value: string) {
-    onChange(value);
-  }
+  const onEditorChange = (value: string | undefined) => {
+    console.log(value);
+    onChange(value || "");
+  };
 
   return (
     <MonacoEditor
-      onChange={handleEditorChange}
+      onChange={onEditorChange}
       height="50vh"
       width={"70vw"}
       defaultLanguage="javascript"
@@ -32,5 +33,4 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initValue, onChange }) => {
     />
   );
 };
-
 export default CodeEditor;

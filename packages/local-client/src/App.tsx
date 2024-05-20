@@ -1,7 +1,6 @@
 import CellList from "./components/cells/CellList";
 import { Provider } from "react-redux";
 import { store } from "./state";
-
 import "./App.css";
 
 function App() {

@@ -18,21 +18,67 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
   const { updateCell, createBundle } = useAction();
   const result = useTypesSelector((state) => state.bundles[cell.id]);
 
+  /**
+   * Combine all the code cells before the current cell
+   */
+
+  const combinedCode = useTypesSelector((state) => {
+    const { data, order } = state.cells;
+    const orderedCells = order.map((id) => data[id]);
+
+    const showFn = `
+    import _React from "react"
+    import _ReactDOM from "react-dom"
+
+    var show = (value) => {
+      const element = document.getElementById("root")
+      
+      if(value.$$typeof && value.props){
+        _ReactDOM.render(value, element)
+        return;
+      }
+
+      if(typeof value === 'object') element.innerHTML = JSON.stringify(value)
+      else element.innerHTML = value;
+    }      
+  `;
+
+    const showFnNoop = `var show = () => {}`;
+
+    const code = [];
+
+    for (let c of orderedCells) {
+      if (c.type === "code") {
+        if (c.id === cell.id) {
+          code.push(showFn);
+        } else {
+          code.push(showFnNoop);
+        }
+
+        code.push(c.content);
+      }
+
+      if (c.id === cell.id) {
+        break;
+      }
+    }
+    return code;
+  });
+
   useEffect(() => {
-    // getting the initial bundle
     if (!result) {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, combinedCode.join("\n"));
       return;
     }
 
     const timer = setTimeout(async () => {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, combinedCode.join("\n"));
     }, 750);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [cell.content, cell.id]);
+  }, [combinedCode.join("\n"), cell.id]);
 
   const html = `
 <!DOCTYPE html>

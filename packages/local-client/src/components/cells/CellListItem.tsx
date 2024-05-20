@@ -9,11 +9,10 @@ interface CellListItemProp {
 
 const CellListItem: React.FC<CellListItemProp> = ({ cell }) => {
   let child: JSX.Element;
+
   if (cell.type == "code") {
-    // codecell
     child = <CodeCell cell={cell} />;
   } else {
-    // markdown cell
     child = <MarkdownCell cell={cell} />;
   }
 

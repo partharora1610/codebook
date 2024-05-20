@@ -112,6 +112,7 @@ const reducer = (state: CellState = initialState, action: Action) => {
       return state;
   }
 };
+
 const randomId = () => {
   return Math.random().toString(36).substr(2, 5);
 };
