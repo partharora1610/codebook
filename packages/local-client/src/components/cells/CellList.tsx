@@ -38,7 +38,7 @@ const CellList: React.FC = () => {
   return (
     <>
       <div onClick={addCellHandler}>Add Cell</div>
-      <div>{renderedCells}</div>
+      <div className="flex flex-col gap-8">{renderedCells}</div>
     </>
   )
 }

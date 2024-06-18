@@ -85,7 +85,6 @@ export const fetchCell = () => {
 
     try {
       const response = await axios.get("/cells")
-      console.log("response", response)
 
       dispatch({
         type: ActionTypes.FETCH_CELL_COMPLETE,

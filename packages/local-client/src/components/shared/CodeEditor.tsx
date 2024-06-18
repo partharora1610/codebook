@@ -1,16 +1,15 @@
-import MonacoEditor from "@monaco-editor/react";
-import React from "react";
+import MonacoEditor from "@monaco-editor/react"
+import React from "react"
 
 interface CodeEditorProps {
-  initValue: string;
-  onChange: (value: string) => void;
+  initValue: string
+  onChange: (value: string) => void
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ initValue, onChange }) => {
   const onEditorChange = (value: string | undefined) => {
-    console.log(value);
-    onChange(value || "");
-  };
+    onChange(value || "")
+  }
 
   return (
     <MonacoEditor
@@ -31,6 +30,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initValue, onChange }) => {
         automaticLayout: true,
       }}
     />
-  );
-};
-export default CodeEditor;
+  )
+}
+export default CodeEditor

@@ -110,7 +110,7 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
 `
 
   return (
-    <div className="w-[50vw] h-[30vh] ">
+    <div className="w-full h-[30vh] ">
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel className="text-black">
           <div className="w-full h-full">

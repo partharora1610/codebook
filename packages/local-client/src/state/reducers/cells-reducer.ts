@@ -50,6 +50,9 @@ const reducer = (state: CellState = initialState, action: Action) => {
       }
 
     case ActionTypes.MOVE_CELL:
+      const { direction } = action.payload
+      console.log({ payload: action.payload })
+      // Implement move cell logic here
       return state
 
     case ActionTypes.INSERT_CELL_BEFORE:
@@ -88,8 +91,6 @@ const reducer = (state: CellState = initialState, action: Action) => {
       }
 
     case ActionTypes.FETCH_CELL_COMPLETE:
-      console.log("Fetch Cell Complete", action.payload)
-
       const order = action.payload.map((cell) => cell.id)
 
       const data = action.payload.reduce((acc, cell) => {

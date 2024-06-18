@@ -21,7 +21,6 @@ const createCellRouter = (filename: string, dir: string) => {
   router.get("/cells", async (req: Request, res: Response) => {
     try {
       const cells = await fs.readFile(fullPath, { encoding: "utf-8" })
-      console.log("Coming from get cells", JSON.parse(cells))
 
       return res.send(JSON.parse(cells))
     } catch (err) {
