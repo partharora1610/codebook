@@ -84,12 +84,12 @@ export const fetchCell = () => {
     })
 
     try {
-      const { data }: { data: Cell[] } = await axios.get("/cells")
-      console.log("Coming from fetch cell", data)
+      const response = await axios.get("/cells")
+      console.log("response", response)
 
       dispatch({
         type: ActionTypes.FETCH_CELL_COMPLETE,
-        payload: data,
+        payload: response.data,
       })
     } catch (error) {
       dispatch({

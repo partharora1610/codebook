@@ -1,19 +1,19 @@
-import { Cell } from "@/state";
-import CodeCell from "../shared/CodeCell";
-import MarkdownCell from "../shared/MarkdownCell";
-import ActionBar from "../shared/ActionBar";
+import { Cell } from "@/state"
+import CodeCell from "../shared/CodeCell"
+import MarkdownCell from "../shared/MarkdownCell"
+import ActionBar from "../shared/ActionBar"
 
 interface CellListItemProp {
-  cell: Cell;
+  cell: Cell
 }
 
 const CellListItem: React.FC<CellListItemProp> = ({ cell }) => {
-  let child: JSX.Element;
+  let child: JSX.Element
 
   if (cell.type == "code") {
-    child = <CodeCell cell={cell} />;
+    child = <CodeCell cell={cell} />
   } else {
-    child = <MarkdownCell cell={cell} />;
+    child = <MarkdownCell cell={cell} />
   }
 
   return (
@@ -23,7 +23,7 @@ const CellListItem: React.FC<CellListItemProp> = ({ cell }) => {
       </div>
       <div>{child}</div>
     </div>
-  );
-};
+  )
+}
 
-export default CellListItem;
+export default CellListItem

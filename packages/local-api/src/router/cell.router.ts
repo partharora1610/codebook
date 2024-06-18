@@ -19,18 +19,18 @@ const createCellRouter = (filename: string, dir: string) => {
   const fullPath = path.join(dir, filename)
 
   router.get("/cells", async (req: Request, res: Response) => {
-    // try {
+    try {
       const cells = await fs.readFile(fullPath, { encoding: "utf-8" })
       console.log("Coming from get cells", JSON.parse(cells))
 
-      return res.send({data:JSON.parse(cells)})
-    // } catch (err) {
-    //   if (err instanceof Error) {
-    //     console.error(err)
-    //     await fs.writeFile(fullPath, "[]", "utf-8")
-    //   }
-    //   return res.send([])
-    // }
+      return res.send(JSON.parse(cells))
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err)
+        await fs.writeFile(fullPath, JSON.stringify([]), "utf-8")
+      }
+      return res.send(JSON.stringify([]))
+    }
   })
 
   router.post("/cells", async (req: Request, res: Response) => {

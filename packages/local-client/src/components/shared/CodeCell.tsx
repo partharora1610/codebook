@@ -1,28 +1,28 @@
-import { useEffect } from "react";
+import { useEffect } from "react"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import CodeEditor from "./CodeEditor";
-import Preview from "./PreviewWindow";
-import { Cell } from "@/state/cell.ts";
-import { useAction } from "@/hooks/use-action.ts";
-import { useTypesSelector } from "@/hooks/use-types-selector.tsx";
+} from "@/components/ui/resizable"
+import CodeEditor from "./CodeEditor"
+import Preview from "./PreviewWindow"
+import { Cell } from "@/state/cell.ts"
+import { useAction } from "@/hooks/use-action.ts"
+import { useTypesSelector } from "@/hooks/use-types-selector.tsx"
 
 interface CodeCellProp {
-  cell: Cell;
+  cell: Cell
 }
 
 const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
-  const { updateCell, createBundle } = useAction();
-  const result = useTypesSelector((state) => state.bundles[cell.id]);
+  const { updateCell, createBundle } = useAction()
+  const result = useTypesSelector((state) => state.bundles[cell.id])
   /**
    * Combine all the code cells before the current cell
    */
   const combinedCode = useTypesSelector((state) => {
-    const { data, order } = state.cells;
-    const orderedCells = order.map((id) => data[id]);
+    const { data, order } = state.cells
+    const orderedCells = order.map((id) => data[id])
 
     const showFn = `
     import _React from "react"
@@ -39,44 +39,44 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
       if(typeof value === 'object') element.innerHTML = JSON.stringify(value)
       else element.innerHTML = value;
     }      
-  `;
+  `
 
-    const showFnNoop = `var show = () => {}`;
+    const showFnNoop = `var show = () => {}`
 
-    const code = [];
+    const code = []
 
     for (let c of orderedCells) {
       if (c.type === "code") {
         if (c.id === cell.id) {
-          code.push(showFn);
+          code.push(showFn)
         } else {
-          code.push(showFnNoop);
+          code.push(showFnNoop)
         }
 
-        code.push(c.content);
+        code.push(c.content)
       }
 
       if (c.id === cell.id) {
-        break;
+        break
       }
     }
-    return code;
-  });
+    return code
+  })
 
   useEffect(() => {
     if (!result) {
-      createBundle(cell.id, combinedCode.join("\n"));
-      return;
+      createBundle(cell.id, combinedCode.join("\n"))
+      return
     }
 
     const timer = setTimeout(async () => {
-      createBundle(cell.id, combinedCode.join("\n"));
-    }, 750);
+      createBundle(cell.id, combinedCode.join("\n"))
+    }, 750)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, [combinedCode.join("\n"), cell.id]);
+      clearTimeout(timer)
+    }
+  }, [combinedCode.join("\n"), cell.id])
 
   const html = `
   <!DOCTYPE html>
@@ -107,7 +107,7 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
     </script>
   </body>
   </html>
-`;
+`
 
   return (
     <div className="w-[50vw] h-[30vh] ">
@@ -115,7 +115,7 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
         <ResizablePanel className="text-black">
           <div className="w-full h-full">
             <CodeEditor
-              initValue=""
+              initValue={cell.content}
               onChange={(value) => updateCell(cell.id, value)}
             />
           </div>
@@ -132,7 +132,7 @@ const CodeCell: React.FC<CodeCellProp> = ({ cell }) => {
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
-  );
-};
+  )
+}
 
-export default CodeCell;
+export default CodeCell
