@@ -1,31 +1,62 @@
 import { Command } from "commander"
 import path from "path"
-import fs from "fs/promises"
+import fs from "fs"
+import os from "os"
 import axios from "axios"
+import FormData from "form-data"
+import inquirer from "inquirer"
 
-const SERIVCE_URL = "http://localhost:5000/upload"
+const SERVICE_URL = "http://localhost:5000/notebook"
+const configPath = path.join(os.homedir(), ".mycli", "config.json")
+
+function readToken() {
+  try {
+    const tokenObj = JSON.parse(fs.readFileSync(configPath, "utf8"))
+    return tokenObj.token
+  } catch (error) {
+    return null
+  }
+}
 
 export const publishCommand = new Command()
   .command("publish [filename]")
-  .description("Publihsing the file")
+  .description("Publishing the file")
   .action(async (filename = "codebook.js") => {
     try {
-      const dir = path.join(process.cwd(), path.dirname(filename))
-      const file = path.basename(filename)
-
-      // File Handler and creating read stream
-      const fileHandler = await fs.open(path.join(dir, file), "r")
-      const readStream = fileHandler.createReadStream()
-
-      const response = await axios.post(SERIVCE_URL, readStream, {
-        headers: {
-          "Content-Type": "application/octet-stream", // Set correct content type
+      const answers = await inquirer.prompt([
+        {
+          type: "input",
+          name: "fileTitle",
+          message: "Enter a suitable file title for your codebook:",
         },
+      ])
+      const { fileTitle } = answers
 
-        // Set max content length based on your requirement
+      const filePath = path.resolve(process.cwd(), filename)
+      const token = readToken()
+
+      await fs.promises.access(filePath)
+
+      const form = new FormData()
+      const readStream = fs.createReadStream(filePath)
+      form.append("file", readStream, path.basename(filename))
+      form.append("title", fileTitle)
+
+      const response = await axios.post(SERVICE_URL, form, {
+        headers: {
+          ...form.getHeaders(),
+          Authorization: `Bearer ${token}`,
+        },
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
       })
+      console.log({ response: response.data })
+
+      if (response.status === 201) {
+        console.log("File uploaded successfully")
+      } else {
+        console.log("Failed to upload the file")
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message)

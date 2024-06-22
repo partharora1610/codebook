@@ -1,18 +1,20 @@
-import CellList from "./components/cells/CellList";
-import { Provider } from "react-redux";
-import { store } from "./state";
-import "./App.css";
+import CellList from "./components/cells/CellList"
+import { Provider } from "react-redux"
+import { store } from "./state"
+import "./App.css"
 
 function App() {
   return (
     <>
-      <Provider store={store}>
-        <div>
-          <CellList />
-        </div>
-      </Provider>
+      <div>
+        <Provider store={store}>
+          <div className="">
+            <CellList />
+          </div>
+        </Provider>
+      </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

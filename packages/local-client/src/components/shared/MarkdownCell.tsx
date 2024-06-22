@@ -19,7 +19,7 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({ cell }) => {
   if (editing) {
     return (
       <div className="w-full">
-        <div data-color-mode="dark">
+        <div data-color-mode="light">
           <MDEditor
             height={300}
             value={cell.content}

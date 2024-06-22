@@ -27,19 +27,19 @@ const CellListItem: React.FC<CellListItemProp> = ({ cell }) => {
   }
 
   return (
-    <div className="border-2 relative">
+    <div className=" relative">
       <div>
         <ActionBar cellId={cell.id} />
         <div>{child}</div>
       </div>
       <div>
         <div
-          className=" h-[60px]"
+          className="mt-4 h-[60px]"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           {isHovered && (
-            <div className="absolute bottom-2 gap-4 flex w-full items-center justify-center">
+            <div className="absolute bottom-2 gap-8 flex w-full items-center justify-center">
               <Button onClick={() => addCellHandler({ type: "text" })}>
                 Markdown
               </Button>

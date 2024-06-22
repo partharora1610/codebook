@@ -11,14 +11,22 @@ const ActionBar: React.FC<ActionBarProps> = ({ cellId }) => {
 
   return (
     <div className="flex gap-6 justify-end mb-2">
-      <Button onClick={() => moveCell(cellId, "up")}>
+      <Button
+        size="icon"
+        className="text-blue-500 bg-transparent hover:bg-blue-50"
+        onClick={() => moveCell(cellId, "up")}
+      >
         <ArrowUp />
       </Button>
-      <Button onClick={() => moveCell(cellId, "down")}>
+      <Button
+        size="icon"
+        className="text-blue-500 bg-transparent hover:bg-blue-50"
+        onClick={() => moveCell(cellId, "down")}
+      >
         <ArrowDown />
       </Button>
       <Button
-        className="hover:bg-red-600 hover:text-white text-red-600 bg-white"
+        className="hover:bg-red-50 text-red-600 bg-transparent "
         onClick={() => deleteCell(cellId)}
       >
         <Trash />
