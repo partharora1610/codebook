@@ -1,25 +1,37 @@
 {
-  "name": "cli",
+  "name": "devsheet",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "tsc --watch --preserveWatchOutput"
+    "start": "tsc --watch --preserveWatchOutput",
+    "build": "tsc",
+    "prepublishOnly": "esbuild src/index.ts --platform=node --outfile=dist/index.js --bundle --minify --define:process.env.NODE_ENV=\\\"production\\\""
   },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": "./dist/index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/commander": "^2.12.2",
-    "@types/inquirer": "^9.0.7",
+    "@devsheet/local-api": "^1.0.0",
     "axios": "^1.7.2",
     "commander": "^12.0.0",
     "form-data": "^4.0.0",
     "inquirer": "^8.0.0",
-    "local-api": "^1.0.0"
+    "@devsheet/local-client": "^0.0.0"
+
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/commander": "^2.12.2",
+    "@types/inquirer": "^9.0.7",
     "@types/node": "^20.12.11",
+    "esbuild": "^0.21.5",
     "typescript": "^5.4.5"
   }
 }
