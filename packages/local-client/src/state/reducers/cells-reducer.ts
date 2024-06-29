@@ -50,7 +50,7 @@ const reducer = (state: CellState = initialState, action: Action) => {
       }
 
     case ActionTypes.MOVE_CELL:
-      const { direction } = action.payload
+      // const { direction } = action.payload
       console.log({ payload: action.payload })
       // Implement move cell logic here
       return state

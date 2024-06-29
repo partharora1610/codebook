@@ -14,6 +14,8 @@ export const checkAuth = new Command()
       const token = readToken()
       if (token) {
         console.log({ token })
+        // need to make a request to the server to check if the token is valid...
+
         console.log("You are authenticated.")
       } else {
         console.log("You are not authenticated.")

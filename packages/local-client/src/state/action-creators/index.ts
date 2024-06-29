@@ -8,7 +8,7 @@ import {
   Action,
 } from "../actions"
 import { ActionTypes } from "../action-types"
-import { Cell, CellTypes } from "../cell"
+import { CellTypes } from "../cell"
 import bundler from "@/bundler"
 import axios from "axios"
 import { RootState } from "../reducers"
